@@ -11,7 +11,6 @@ import zipfile
 
 
 libraries = {
-    'boost': 'https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip',
     'tclap': 'https://netix.dl.sourceforge.net/project/tclap/tclap-1.2.2.tar.gz',
     'fast-cpp-csv-parser': 'https://github.com/ben-strasser/fast-cpp-csv-parser/archive/master.zip',
 }
