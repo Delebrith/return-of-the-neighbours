@@ -10,6 +10,7 @@
 int main()
 {
 	assert(fun(1) == 1);
+	assert(fun_negate({ 1, 2, 3 }).size() == 3);
 
 	return 0;
 }	

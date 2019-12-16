@@ -330,3 +330,8 @@ ASALocalRun/
 .mfractor/
 
 lib/*/
+
+# generated files in pynbc
+kNN_NBC/pynbc/*.py
+kNN_NBC/pynbc/*.cxx
+kNN_NBC/pynbc/cpython.props
