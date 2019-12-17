@@ -9,7 +9,7 @@ Furthermore, console interface is provided
 
 first, install requirements:
 
-	`python -m pip install -r requirements.txt`
+	python -m pip install -r requirements.txt
 
 run setup\setup.py script to:
 
