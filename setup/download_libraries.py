@@ -21,7 +21,7 @@ def download_libraries():
     for name, url in libraries.items():
         target_dir = os.path.join(os.path.dirname(__file__), '..', 'lib', name)
         print(f'Downloading {name}...')
-        if os.path.isdir(target_dir):
+        if os.path.exists(target_dir):
             print('Download skipped, library directory already exists')
             continue
 
@@ -32,7 +32,7 @@ def download_libraries():
     
         with tempfile.TemporaryFile() as tfile:
             tfile.file.write(response.content)
-            os.mkdir(target_dir)
+            os.makedirs(target_dir)
 
             if url.endswith('.zip'):
                 print(f'Extracting {name}...')
