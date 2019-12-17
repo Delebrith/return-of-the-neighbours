@@ -7,6 +7,10 @@ Furthermore, console interface is provided
 
 ## Setup
 
+first, install requirements:
+
+	`python -m pip install -r requirements.txt`
+
 run setup\setup.py script to:
 
 - Download libraries and tools. Full list is given in downlaod_libraries.py script
