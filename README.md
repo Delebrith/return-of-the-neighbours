@@ -1,6 +1,6 @@
 # Neighborhood-Based Clustering using k-NN and k+-NN with Triangle Inequality
 
-Project is organized as MS VS2017 solution.
+Project is organized as MS VS2019 solution and configured to be built using Windows 10 SDK.
 
 NBC algorithm is implemented and built to DLL and CPython module (PYD + .py files), providing C++ and Python interfaces.
 Furthermore, console interface is provided
