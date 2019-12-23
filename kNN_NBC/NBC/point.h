@@ -2,9 +2,9 @@
 
 class Point 
 {
-	std::vector<double>* attributeValues;
+	const std::vector<double>* attributeValues;
 public:
-	Point(std::vector<double>* attributeValues);
+	Point(const std::vector<double>* attributeValues);
 	
-	std::vector<double>* getAttributeValues();
+	const std::vector<double>* getAttributeValues();
 };
