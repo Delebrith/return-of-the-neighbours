@@ -1,5 +1,6 @@
 #include "nbc.h"
-#include "nbcrunner.h"
+#include "knn_nbcrunner.h"
+#include "kpnn_nbcrunner.h"
 
 std::vector<int> a = std::vector<int>(1000000);
 
@@ -22,9 +23,15 @@ std::vector<int> fun_negate(std::vector<int> arg)
 	return out;
 }
 
-std::vector<int> nbc_kNN(const std::vector<std::vector<double>>& attributes)
+std::vector<int> nbc_kNN(const std::vector<std::vector<double>>& attributes, int k)
 {
-	NBCRunner nbcRunner(attributes);
+	KNN_NBCRunner nbcRunner(attributes, k);
+	return nbcRunner.run();
+}
+
+std::vector<int> nbc_kpNN(const std::vector<std::vector<double>>& attributes, int k)
+{
+	KpNN_NBCRunner nbcRunner(attributes, k);
 	return nbcRunner.run();
 }
 

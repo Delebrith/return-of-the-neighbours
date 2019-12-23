@@ -138,11 +138,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="knn_nbcrunner.h" />
+    <ClInclude Include="kpnn_nbcrunner.h" />
     <ClInclude Include="nbc.h" />
     <ClInclude Include="nbcrunner.h" />
     <ClInclude Include="point.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="knn_nbcrunner.cpp" />
+    <ClCompile Include="kpnn_nbcrunner.cpp" />
     <ClCompile Include="nbc.cpp" />
     <ClCompile Include="nbcrunner.cpp" />
     <ClCompile Include="point.cpp" />
