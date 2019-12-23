@@ -22,9 +22,10 @@ std::vector<int> fun_negate(std::vector<int> arg)
 	return out;
 }
 
-std::vector<int> nbc_kNN(const std::vector<std::vector<double>>& attributes)
+std::vector<int> nbc_kNN(const int k, const ReferenceStrategy referenceStategy,
+	const std::vector<std::vector<double>>& attributes)
 {
-	NBCRunner nbcRunner(attributes);
+	NBCRunner nbcRunner(k, referenceStategy, attributes);
 	return nbcRunner.run();
 }
 

@@ -141,6 +141,7 @@
     <ClInclude Include="nbc.h" />
     <ClInclude Include="nbcrunner.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="reference_strategy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nbc.cpp" />

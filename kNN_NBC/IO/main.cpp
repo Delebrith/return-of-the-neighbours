@@ -37,3 +37,12 @@ int main(int argc, char** argv)
 	data.writeCsv(std::cout, delim, enclosing);
 }
 
+	std::vector<std::vector<double>> input;
+	input.push_back(std::vector<double>({ 1.0, 2.0 }));
+	input.push_back(std::vector<double>({ 3.0, 4.0 }));
+	input.push_back(std::vector<double>({ 5.0, 1.0 }));
+
+	nbc_kNN(2, ReferenceStrategy::MAX_VALUE, input);
+
+	return 0;
+}	
