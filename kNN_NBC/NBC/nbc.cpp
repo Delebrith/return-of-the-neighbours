@@ -22,9 +22,9 @@ std::vector<int> fun_negate(std::vector<int> arg)
 	return out;
 }
 
-std::vector<int> DLL_EXPORT nbc_kNN(std::vector<std::vector<double>> attributes)
+std::vector<int> nbc_kNN(std::vector<std::vector<double>> attributes)
 {
-	NBCRunner nbcRunner(&attributes);
+	NBCRunner nbcRunner(attributes);
 	return nbcRunner.run();
 }
 
