@@ -26,7 +26,7 @@ std::vector<Point> NBCRunner::initPoints(const std::vector<std::vector<double>>&
 	return points;
 }
 
-Point NBCRunner::selectReferencePoint(const std::vector<std::vector<double>>& features, const ReferenceStrategy strategy)
+CreatedPoint NBCRunner::selectReferencePoint(const std::vector<std::vector<double>>& features, const ReferenceStrategy strategy)
 {
 	if (strategy == ReferenceStrategy::MAX_VALUE)
 	{

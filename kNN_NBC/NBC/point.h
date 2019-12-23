@@ -4,5 +4,6 @@
 class Point 
 {
 public:
-	virtual const std::vector<double>* getAttributeValues();
+	Point() {};
+	virtual const std::vector<double>* getAttributeValues() = 0;
 };
