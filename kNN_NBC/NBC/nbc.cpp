@@ -1,5 +1,5 @@
 #include "nbc.h"
-
+#include "nbcrunner.h"
 
 std::vector<int> a = std::vector<int>(1000000);
 
@@ -21,3 +21,10 @@ std::vector<int> fun_negate(std::vector<int> arg)
 		out.push_back(-a);
 	return out;
 }
+
+std::vector<int> nbc_kNN(const std::vector<std::vector<double>>& attributes)
+{
+	NBCRunner nbcRunner(attributes);
+	return nbcRunner.run();
+}
+
