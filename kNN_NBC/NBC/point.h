@@ -11,7 +11,8 @@ public:
 	const std::vector<double>* getAttributeValues();
 	const std::vector<Point*>& getNeigbourhood() const;
 	void setNeihbourhood(std::vector<Point*>&&);
-
+	
+	//returns a square of cartesian distance
 	double getDistance(const Point& p) const;
 	double getDistanceFromReference() const;
 };
