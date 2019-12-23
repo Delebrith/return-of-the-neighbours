@@ -12,7 +12,6 @@ import zipfile
 
 libraries = {
     'tclap': 'https://netix.dl.sourceforge.net/project/tclap/tclap-1.2.2.tar.gz',
-    'fast-cpp-csv-parser': 'https://github.com/ben-strasser/fast-cpp-csv-parser/archive/master.zip',
 	'swig': 'https://vorboss.dl.sourceforge.net/project/swig/swigwin/swigwin-3.0.12/swigwin-3.0.12.zip'
 }
 
