@@ -1,4 +1,6 @@
 #include "nbcrunner.h"
+#include "CreatedPoint.h"
+#include "DatasetPoint.h"
 #include <iostream>
 
 NBCRunner::NBCRunner(const int k, const ReferenceStrategy referenceStrategy, 
@@ -19,7 +21,7 @@ std::vector<Point> NBCRunner::initPoints(const std::vector<std::vector<double>>&
 	points.reserve(features.size());
 
 	for (const std::vector<double>& vect : features) {
-		points.push_back(Point(&vect));
+		points.push_back(DatasetPoint(&vect));
 	}
 	return points;
 }
@@ -28,11 +30,11 @@ Point NBCRunner::selectReferencePoint(const std::vector<std::vector<double>>& fe
 {
 	if (strategy == ReferenceStrategy::MAX_VALUE)
 	{
-		return Point(&getMaxValues(features));
+		return CreatedPoint(getMaxValues(features));
 	}
 	else
 	{
-		return Point(&getMinValues(features));
+		return CreatedPoint(getMinValues(features));
 	}
 }
 
