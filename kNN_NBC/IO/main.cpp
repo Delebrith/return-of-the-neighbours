@@ -35,15 +35,7 @@ int main(int argc, char** argv)
 	std::set<int> ignoreCols(ignoreColsArg.getValue().cbegin(), ignoreColsArg.getValue().cend());
 	char enclosing = enclosingArg.getValue();
 
-	Dataset<double> d(Dataset<double>::readCsv(std::cin, headers, idCol, ignoreCols, delim, enclosing));
-
-	for (std::vector<double> f : d.getFeatures())
-	{
-		for (double v : f)
-			std::cout << v << "\t";
-		std::cout << std::endl;
-	}
-
-	return 0;
+	Dataset<double> data(Dataset<double>::readCsv(std::cin, headers, idCol, ignoreCols, delim, enclosing));
+	data.writeCsv(std::cout, delim, enclosing);
 }
 

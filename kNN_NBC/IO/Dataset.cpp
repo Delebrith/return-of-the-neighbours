@@ -141,6 +141,56 @@ template<class T> std::string Dataset<T>::unescapeCsv(std::string field, char en
 	return out;
 }
 
+template<class T> void Dataset<T>::writeCsv(std::ostream& stream, char delim, char enclosing)
+{
+	for (int i = 0; i < this->features.size(); ++i)
+	{
+		if (this->hasIds())
+		{
+			std::string id = escapeCsv(this->ids[i], delim, enclosing);
+			stream << id;
+			if (this->features[i].size() > 0)
+				stream << delim;
+		}
+		else
+		{
+			for (int j = 0; j < this->features[i].size(); ++j)
+			{
+				std::string val = escapeCsv(std::to_string(this->features[i][j]), delim, enclosing);
+				stream << val;
+				if (this->features[i].size() > j + 1)
+					stream << delim;
+			}
+
+			stream << std::endl;
+		}
+	}
+}
+
+template<class T> std::string Dataset<T>::escapeCsv(std::string field, char delim, char enclosing)
+{
+	bool enclose = false;
+	for (int i = 0; i < field.size(); ++i)
+	{
+		if (field[i] == delim)
+			enclose = true;
+		if (field[i] == enclosing)
+		{
+			enclose = true;
+			field.insert(i, 1, enclosing);
+			++i;
+		}
+	}
+
+	if (enclose)
+	{
+		field.insert(0, 1, enclosing);
+		field.push_back(enclosing);
+	}
+
+	return field;
+}
+
 template<> double Dataset<double>::parse(const std::string& str)
 {
 	return std::stod(str);

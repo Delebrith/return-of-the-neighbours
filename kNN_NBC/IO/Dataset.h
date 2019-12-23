@@ -29,7 +29,8 @@ public:
 
 	void writeCsv(
 		std::ostream& stream,
-		char delim = ',');
+		char delim = ',',
+		char enclosing = '"');
 
 private:
 	Dataset() {}
@@ -41,5 +42,6 @@ private:
 	static bool readCsvRow(std::istream& stream, std::string& buffer, char enclosing);
 	static std::vector<std::string> parseCsvRow(std::string& line, char delim, char enclosing);
 	static std::string unescapeCsv(std::string field, char enclosing);
+	static std::string escapeCsv(std::string field, char delim, char enclosing);
 	static T parse(const std::string&);
 };
