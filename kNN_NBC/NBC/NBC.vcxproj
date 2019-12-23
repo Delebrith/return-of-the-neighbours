@@ -139,9 +139,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="nbc.h" />
+    <ClInclude Include="nbcrunner.h" />
+    <ClInclude Include="point.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nbc.cpp" />
+    <ClCompile Include="nbcrunner.cpp" />
+    <ClCompile Include="point.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

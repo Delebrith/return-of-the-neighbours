@@ -9,3 +9,5 @@
 
 int DLL_EXPORT fun(int x);
 std::vector<int> DLL_EXPORT fun_negate(std::vector<int> arg);
+
+std::vector<int> DLL_EXPORT nbc_kNN(std::vector<std::vector<double>> attributes);

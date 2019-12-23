@@ -5,9 +5,11 @@
 //To allow usage of dllimport
 %include <windows.i>
 
-//Instatiate vector<int> type
+//Instatiate vector<int> type and vector<vector<double>> type
 namespace std {
 	%template(intvector) vector<int>;
+	%template(doublevector) vector<double>;
+	%template(doublevectorvector) vector<vector<double>>;
 }
 
 //Include c++ file
