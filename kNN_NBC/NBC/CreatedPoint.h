@@ -4,7 +4,7 @@
 class CreatedPoint :
 	public Point
 {
-	const std::vector<double> attributeValues;
+	std::vector<double> attributeValues;
 public:
 	CreatedPoint() {};
 	CreatedPoint(const std::vector<double> attributeValues) : attributeValues(attributeValues) {};
