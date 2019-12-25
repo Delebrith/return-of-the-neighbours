@@ -34,41 +34,41 @@ void NBCRunner::calculateNeighborhoods(std::vector<Point*>& order)
 
 void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& order)
 {
-	orderedNeighborhood nb;
+	orderedNeighborhood candidateNeighborhood;
 
 	int bw = pointId - 1;
 	int fw = pointId + 1;
 
 	//get candidates
-	while ((bw >= 0 || fw < this->points.size()) && nb.size() < this->k)
+	while ((bw >= 0 || fw < this->points.size()) && candidateNeighborhood.size() < this->k)
 	{
 		if (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() <
 			order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference())
 		{
 			double dist = order[pointId]->getDistance(*order[bw]);
-			nb.insert(std::make_pair(dist, order[bw]));
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
 			--bw;
 		}
 		else
 		{
 			double dist = order[pointId]->getDistance(*order[fw]);
-			nb.insert(std::make_pair(dist, order[fw]));
+			candidateNeighborhood.insert(std::make_pair(dist, order[fw]));
 			++fw;
 		}
 	}
 
 	//get actual neighborhood
-	double eps = nb.begin()->first;
+	double eps = candidateNeighborhood.begin()->first;
 
 	while (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() < eps)
 	{
 		double dist = order[pointId]->getDistance(*order[bw]);
 		if (dist == eps)
-			nb.insert(std::make_pair(dist, order[bw]));
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
 		else if (dist < eps)
 		{
-			insertCloserPointToNeihborhood(nb, order[bw], dist);
-			eps = nb.begin()->first;
+			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
+			eps = candidateNeighborhood.begin()->first;
 		}
 	}
 
@@ -76,17 +76,17 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	{
 		double dist = order[pointId]->getDistance(*order[bw]);
 		if (dist == eps)
-			nb.insert(std::make_pair(dist, order[bw]));
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
 		else if (dist < eps)
 		{
-			insertCloserPointToNeihborhood(nb, order[bw], dist);
-			eps = nb.begin()->first;
+			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
+			eps = candidateNeighborhood.begin()->first;
 		}
 	}
 
 	std::vector<Point*> neighborhood;
-	neighborhood.resize(nb.size());
-	for (auto& p : nb)
+	neighborhood.resize(candidateNeighborhood.size());
+	for (auto& p : candidateNeighborhood)
 		neighborhood.push_back(p.second);
 
 	order[pointId]->setNeihbourhood(std::move(neighborhood));

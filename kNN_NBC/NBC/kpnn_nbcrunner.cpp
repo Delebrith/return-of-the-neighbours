@@ -1,18 +1,18 @@
 #include "kpnn_nbcrunner.h"
 
 
-void KpNN_NBCRunner::insertCloserPointToNeihborhood(orderedNeighborhood& nb, Point* point, double dist)
+void KpNN_NBCRunner::insertCloserPointToNeihborhood(orderedNeighborhood& candidateNeighborhood, Point* point, double dist)
 {
-	double eps = nb.begin()->first;
+	double eps = candidateNeighborhood.begin()->first;
 
-	int num_eq_to_first = 1;
-	orderedNeighborhood::iterator it = nb.begin();
+	int points_eq_dist_to_first = 1;
+	orderedNeighborhood::iterator it = candidateNeighborhood.begin();
 	++it;
 
-	for (; it != nb.end() && it->first == eps; ++it)
-		++num_eq_to_first;
-	if (nb.size() - num_eq_to_first + 1 >= this->k)
-		nb.erase(nb.begin(), it);
+	for (; it != candidateNeighborhood.end() && it->first == eps; ++it)
+		++points_eq_dist_to_first;
+	if (candidateNeighborhood.size() - points_eq_dist_to_first + 1 >= this->k)
+		candidateNeighborhood.erase(candidateNeighborhood.begin(), it);
 
-	nb.insert(std::make_pair(dist, point));
+	candidateNeighborhood.insert(std::make_pair(dist, point));
 }
