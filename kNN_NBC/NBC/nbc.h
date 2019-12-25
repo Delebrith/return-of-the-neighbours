@@ -11,5 +11,8 @@
 int DLL_EXPORT fun(int x);
 std::vector<int> DLL_EXPORT fun_negate(std::vector<int> arg);
 
-std::vector<int> DLL_EXPORT nbc_kNN(const int k, const ReferenceStrategy referenceStategy, 
+std::vector<int> DLL_EXPORT nbc_kNN(const int k, const ReferenceStrategy referenceStategy,
+	const std::vector<std::vector<double>>& attributes);
+
+std::vector<int> DLL_EXPORT nbc_kpNN(const int k, const ReferenceStrategy referenceStategy,
 	const std::vector<std::vector<double>>& attributes);

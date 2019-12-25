@@ -138,14 +138,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="knn_nbcrunner.h" />
+    <ClInclude Include="kpnn_nbcrunner.h" />
     <ClInclude Include="CreatedPoint.h" />
     <ClInclude Include="DatasetPoint.h" />
     <ClInclude Include="nbc.h" />
     <ClInclude Include="nbcrunner.h" />
+    <ClCompile Include="point.cpp" />
     <ClInclude Include="point.h" />
     <ClInclude Include="reference_strategy.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="knn_nbcrunner.cpp" />
+    <ClCompile Include="kpnn_nbcrunner.cpp" />
     <ClCompile Include="CreatedPoint.cpp" />
     <ClCompile Include="DatasetPoint.cpp" />
     <ClCompile Include="nbc.cpp" />

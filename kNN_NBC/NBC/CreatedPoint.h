@@ -8,6 +8,6 @@ class CreatedPoint :
 public:
 	CreatedPoint() {};
 	CreatedPoint(const std::vector<double> attributeValues) : attributeValues(attributeValues) {};
-	const std::vector<double>* getAttributeValues();
+	const std::vector<double>* getAttributeValues() const;
 };
 

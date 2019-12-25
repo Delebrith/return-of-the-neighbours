@@ -2,12 +2,13 @@
 #include <iostream>
 #include <math.h>
 
-NBCRunner::NBCRunner(const int k, const ReferenceStrategy referenceStrategy, 
+NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy, 
 	const std::vector<std::vector<double>>& features) 
 {
 	this->k = k;
 	this->referencePoint = selectReferencePoint(features, referenceStrategy);
 	this->points = initPoints(features);
+	this->k = k;
 }
 
 std::vector<int> NBCRunner::run()
@@ -23,6 +24,72 @@ std::vector<DatasetPoint> NBCRunner::initPoints(const std::vector<std::vector<do
 		points.push_back(DatasetPoint(&vect));
 	}
 	return points;
+}
+
+void NBCRunner::calculateNeighborhoods(std::vector<Point*>& order)
+{
+	for (int i = 0; i < this->points.size(); ++i)
+		this->calculatePointNeighborhood(i, order);
+}
+
+void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& order)
+{
+	orderedNeighborhood candidateNeighborhood;
+
+	int bw = pointId - 1;
+	int fw = pointId + 1;
+
+	//get candidates
+	while ((bw >= 0 || fw < this->points.size()) && candidateNeighborhood.size() < this->k)
+	{
+		if (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() <
+			order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference())
+		{
+			double dist = order[pointId]->getDistance(*order[bw]);
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
+			--bw;
+		}
+		else
+		{
+			double dist = order[pointId]->getDistance(*order[fw]);
+			candidateNeighborhood.insert(std::make_pair(dist, order[fw]));
+			++fw;
+		}
+	}
+
+	//get actual neighborhood
+	double eps = candidateNeighborhood.begin()->first;
+
+	while (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() < eps)
+	{
+		double dist = order[pointId]->getDistance(*order[bw]);
+		if (dist == eps)
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
+		else if (dist < eps)
+		{
+			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
+			eps = candidateNeighborhood.begin()->first;
+		}
+	}
+
+	while (fw < this->points.size() && order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() < eps)
+	{
+		double dist = order[pointId]->getDistance(*order[bw]);
+		if (dist == eps)
+			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
+		else if (dist < eps)
+		{
+			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
+			eps = candidateNeighborhood.begin()->first;
+		}
+	}
+
+	std::vector<Point*> neighborhood;
+	neighborhood.resize(candidateNeighborhood.size());
+	for (auto& p : candidateNeighborhood)
+		neighborhood.push_back(p.second);
+
+	order[pointId]->setNeihbourhood(std::move(neighborhood));
 }
 
 CreatedPoint NBCRunner::selectReferencePoint(const std::vector<std::vector<double>>& features, const ReferenceStrategy strategy)
@@ -75,18 +142,7 @@ std::vector<double>& NBCRunner::getMinValues(const std::vector<std::vector<doubl
 	return extremeValues;
 }
 
-double NBCRunner::calculateDistance(Point& point1, Point& point2)
-{
-	double squaredSum = 0;
-	for (int i = 0; i < point1.getAttributeValues()->size(); i++) {
-		double difference = point1.getAttributeValues()->at(i) - point2.getAttributeValues()->at(i);
-		squaredSum += difference * difference;
-	}
-	return sqrt(squaredSum);
-}
-
 double NBCRunner::calculateDistanceToReferencePoint(Point& point)
 {
-	return this->calculateDistance(this->referencePoint, point);
+	return this->referencePoint.getDistance(point);
 }
-
