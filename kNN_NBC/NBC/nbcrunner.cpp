@@ -1,5 +1,6 @@
 #include "nbcrunner.h"
 #include <iostream>
+#include <math.h>
 
 NBCRunner::NBCRunner(const int k, const ReferenceStrategy referenceStrategy, 
 	const std::vector<std::vector<double>>& features) 
@@ -72,5 +73,20 @@ std::vector<double>& NBCRunner::getMinValues(const std::vector<std::vector<doubl
 		extremeValues.push_back(minValue);
 	}
 	return extremeValues;
+}
+
+double NBCRunner::calculateDistance(Point& point1, Point& point2)
+{
+	double squaredSum = 0;
+	for (int i = 0; i < point1.getAttributeValues()->size(); i++) {
+		double difference = point1.getAttributeValues()->at(i) - point2.getAttributeValues()->at(i);
+		squaredSum += difference * difference;
+	}
+	return sqrt(squaredSum);
+}
+
+double NBCRunner::calculateDistanceToReferencePoint(Point& point)
+{
+	return this->calculateDistance(this->referencePoint, point);
 }
 

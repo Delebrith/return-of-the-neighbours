@@ -17,6 +17,8 @@ protected:
 		const ReferenceStrategy referenceStrategy);
 	std::vector<double>& getMaxValues(const std::vector<std::vector<double>>& features);
 	std::vector<double>& getMinValues(const std::vector<std::vector<double>>& features);
+	double calculateDistance(Point& point1, Point& point2);
+	double calculateDistanceToReferencePoint(Point& point);
 
 public:
 	NBCRunner(const int k, const ReferenceStrategy referenceStrategy, const std::vector<std::vector<double>>& features);
