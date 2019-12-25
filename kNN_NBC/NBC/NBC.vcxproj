@@ -138,14 +138,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CreatedPoint.h" />
+    <ClInclude Include="DatasetPoint.h" />
     <ClInclude Include="nbc.h" />
     <ClInclude Include="nbcrunner.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="reference_strategy.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CreatedPoint.cpp" />
+    <ClCompile Include="DatasetPoint.cpp" />
     <ClCompile Include="nbc.cpp" />
     <ClCompile Include="nbcrunner.cpp" />
-    <ClCompile Include="point.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
