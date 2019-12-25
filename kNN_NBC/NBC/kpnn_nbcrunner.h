@@ -4,7 +4,8 @@
 class KpNN_NBCRunner : public NBCRunner
 {
 public:
-	KpNN_NBCRunner(const std::vector<std::vector<double>>& features, int k) : NBCRunner(features, k) {}
+	KpNN_NBCRunner(int k, ReferenceStrategy strategy,
+		const std::vector<std::vector<double>>& features) : NBCRunner(k, strategy, features) {}
 protected:
 	virtual void insertCloserPointToNeihborhood(orderedNeighborhood&, Point* point, double dist);
 };

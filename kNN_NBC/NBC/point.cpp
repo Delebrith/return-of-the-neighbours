@@ -1,16 +1,6 @@
 #include "point.h"
 
 
-Point::Point(const std::vector<double>* attributeValues)
-{
-	this->attributeValues = attributeValues;
-}
-
-const std::vector<double>* Point::getAttributeValues()
-{
-	return this->attributeValues;
-}
-
 const std::vector<Point*>& Point::getNeigbourhood() const
 {
 	return this->neighbourhood;
@@ -29,9 +19,9 @@ double Point::getDistanceFromReference() const
 double Point::getDistance(const Point& p) const
 {
 	double dist = 0.;
-	for (int i = 0; i < p.attributeValues->size() && this->attributeValues->size(); ++i)
+	for (int i = 0; i < p.getAttributeValues()->size() && this->getAttributeValues()->size(); ++i)
 	{
-		double diff = (p.attributeValues - this->attributeValues);
+		double diff = (p.getAttributeValues() - this->getAttributeValues());
 		dist += diff * diff;
 	}
 

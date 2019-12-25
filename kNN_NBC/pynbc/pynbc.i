@@ -15,7 +15,9 @@ namespace std {
 //Include c++ file
 %{
 #include "nbc.h"
+#include "reference_strategy.h"
 %}
 
 //Generate wrapper for included symbols
 %include "nbc.h"
+%include "reference_strategy.h"

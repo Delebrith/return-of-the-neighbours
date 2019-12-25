@@ -23,15 +23,17 @@ std::vector<int> fun_negate(std::vector<int> arg)
 	return out;
 }
 
-std::vector<int> nbc_kNN(const std::vector<std::vector<double>>& attributes, int k)
+std::vector<int> nbc_kNN(int k, const ReferenceStrategy referenceStategy,
+	const std::vector<std::vector<double>> & attributes)
 {
-	KNN_NBCRunner nbcRunner(attributes, k);
+	KNN_NBCRunner nbcRunner(k, referenceStategy, attributes);
 	return nbcRunner.run();
 }
 
-std::vector<int> nbc_kpNN(const std::vector<std::vector<double>>& attributes, int k)
+std::vector<int> nbc_kpNN(int k, const ReferenceStrategy referenceStategy,
+	const std::vector<std::vector<double>>& attributes)
 {
-	KpNN_NBCRunner nbcRunner(attributes, k);
+	KpNN_NBCRunner nbcRunner(k, referenceStategy, attributes);
 	return nbcRunner.run();
 }
 
