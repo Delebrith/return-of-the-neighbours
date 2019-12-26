@@ -7,6 +7,8 @@ class Point
 	double distanceFromReference = 0;
 	int reverseNeighbourhoodCounter = 0;
 	double ndf;
+
+	int cluster = -1;
 public:
 	Point() {};
 
@@ -18,8 +20,11 @@ public:
 	
 	//returns a square of cartesian distance
 	double getDistance(const Point& p) const;
+	void setDistanceFromReference(double distance);
 	double getDistanceFromReference() const;
 	int& getReverseNeighbourhoodCounter();
 	double getNDF();
-public:
+
+	int getCluster() const;
+	void setCluster(int cluster);
 };

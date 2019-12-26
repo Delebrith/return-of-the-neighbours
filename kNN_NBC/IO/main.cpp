@@ -17,6 +17,8 @@ int main(int argc, char** argv)
 	TCLAP::SwitchArg headersArg("r", "headers", "Indicates that csv file contains headers row that is to be ignored");
 	TCLAP::ValueArg<int> idColArg("i", "id", "Indicates that csv file contains id column", false, -1, "int");
 	TCLAP::MultiArg<int> ignoreColsArg("n", "ignore", "Specifies columns to be ignored by algorithm", false, "int");
+	TCLAP::ValueArg<int> kArg("k", "k", "K value for algorithm", true, 3, "int");
+	TCLAP::SwitchArg kPlusNNArg("+", "k-plus", "Use K+NN rather than KNN version of algorithm");
 
 	args.add(delimArg);
 	args.add(delimTabArg);
@@ -24,8 +26,11 @@ int main(int argc, char** argv)
 	args.add(headersArg);
 	args.add(idColArg);
 	args.add(ignoreColsArg);
+	args.add(kArg);
+	args.add(kPlusNNArg);
 
 	args.parse(argc, argv);
+
 
 	char delim = delimTabArg.getValue() ? '\t' : delimArg.getValue();
 	bool headers = headersArg.getValue();
@@ -34,14 +39,31 @@ int main(int argc, char** argv)
 	char enclosing = enclosingArg.getValue();
 
 	Dataset<double> data(Dataset<double>::readCsv(std::cin, headers, idCol, ignoreCols, delim, enclosing));
-	data.writeCsv(std::cout, delim, enclosing);
 
-	std::vector<std::vector<double>> input;
-	input.push_back(std::vector<double>({ 1.0, 2.0 }));
-	input.push_back(std::vector<double>({ 3.0, 4.0 }));
-	input.push_back(std::vector<double>({ 5.0, 1.0 }));
 
-	std::vector<int> result = nbc_kNN(2, ReferenceStrategy::MAX_VALUE, input);
+	int k = kArg.getValue();
+	int kPlus = kPlusNNArg.getValue();
 
+	std::vector<int> result = kPlus ?
+		nbc_kpNN(k, ReferenceStrategy::MAX_VALUE, data.getFeatures()) :
+		nbc_kNN(k, ReferenceStrategy::MAX_VALUE, data.getFeatures());
+
+
+	std::vector<std::vector<int>> outputFeatures;
+	outputFeatures.resize(result.size());
+
+	for (int i = 0; i < result.size(); ++i)
+		outputFeatures[i].push_back(result[i]);
+
+	if (data.hasIds())
+	{
+		Dataset<int> output(std::move(std::vector<std::string>(data.getIds())), std::move(outputFeatures));
+		output.writeCsv(std::cout, delim, enclosing);
+	}
+	else
+	{
+		Dataset<int> output(std::move(outputFeatures));
+		output.writeCsv(std::cout, delim, enclosing);
+	}
 	return 0;
 }	

@@ -1,6 +1,8 @@
 #include "nbcrunner.h"
 #include <iostream>
 #include <math.h>
+#include <stack>
+#include <algorithm>
 
 NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy, 
 	const std::vector<std::vector<double>>& features) 
@@ -13,7 +15,16 @@ NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy,
 
 std::vector<int> NBCRunner::run()
 {
-	return std::vector<int>();
+	for (Point& p : this->points)
+		p.setDistanceFromReference(this->calculateDistanceToReferencePoint(p));
+
+	std::vector<Point*> orderedByDistToReference = this->getPointsOrderedByDistanceToReference();
+	this->calculateNeighborhoods(orderedByDistToReference);
+	this->calculateReversedNeighbourhoods();
+	this->calculateNDFs();
+	this->createClusters();
+
+	return this->getClustering();
 }
 
 std::vector<DatasetPoint> NBCRunner::initPoints(const std::vector<std::vector<double>>& features) {
@@ -24,6 +35,24 @@ std::vector<DatasetPoint> NBCRunner::initPoints(const std::vector<std::vector<do
 		points.push_back(DatasetPoint(&vect));
 	}
 	return points;
+}
+
+static inline bool comparePointsByDistToReference(const Point* a, const Point* b)
+{
+	return a->getDistanceFromReference() < b->getDistanceFromReference();
+}
+
+std::vector<Point*> NBCRunner::getPointsOrderedByDistanceToReference()
+{
+	std::vector<Point*> ordered;
+
+	ordered.reserve(this->points.size());
+	for (Point& p : this->points)
+		ordered.push_back(&p);
+
+	std::sort(ordered.begin(), ordered.end(), comparePointsByDistToReference);
+
+	return ordered;
 }
 
 void NBCRunner::calculateNeighborhoods(std::vector<Point*>& order)
@@ -42,8 +71,8 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	//get candidates
 	while ((bw >= 0 || fw < this->points.size()) && candidateNeighborhood.size() < this->k)
 	{
-		if (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() <
-			order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference())
+		if (bw >= 0 && (fw == this->points.size() || order[pointId]->getDistanceFromReference() - order[bw]->getDistanceFromReference() <
+			order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference()))
 		{
 			double dist = order[pointId]->getDistance(*order[bw]);
 			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
@@ -60,7 +89,7 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	//get actual neighborhood
 	double eps = candidateNeighborhood.begin()->first;
 
-	while (bw >= 0 && order[bw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() < eps)
+	while (bw >= 0 && order[pointId]->getDistanceFromReference() - order[bw]->getDistanceFromReference() <= eps)
 	{
 		double dist = order[pointId]->getDistance(*order[bw]);
 		if (dist == eps)
@@ -70,22 +99,24 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
 			eps = candidateNeighborhood.begin()->first;
 		}
+		--bw;
 	}
 
-	while (fw < this->points.size() && order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() < eps)
+	while (fw < this->points.size() && order[fw]->getDistanceFromReference() - order[pointId]->getDistanceFromReference() <= eps)
 	{
-		double dist = order[pointId]->getDistance(*order[bw]);
+		double dist = order[pointId]->getDistance(*order[fw]);
 		if (dist == eps)
-			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
+			candidateNeighborhood.insert(std::make_pair(dist, order[fw]));
 		else if (dist < eps)
 		{
-			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
+			insertCloserPointToNeihborhood(candidateNeighborhood, order[fw], dist);
 			eps = candidateNeighborhood.begin()->first;
 		}
+		++fw;
 	}
 
 	std::vector<Point*> neighborhood;
-	neighborhood.resize(candidateNeighborhood.size());
+	neighborhood.reserve(candidateNeighborhood.size());
 	for (auto& p : candidateNeighborhood)
 		neighborhood.push_back(p.second);
 
@@ -94,14 +125,14 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 
 void NBCRunner::calculateReversedNeighbourhoods()
 {
-	for (DatasetPoint point : this->points) {
+	for (DatasetPoint& point : this->points) {
 		point.updateReversedNeighbourhood();
 	}
 }
 
 void NBCRunner::calculateNDFs()
 {
-	for (DatasetPoint point : this->points) {
+	for (DatasetPoint& point : this->points) {
 		point.calculateNDF();
 	}
 }
@@ -118,7 +149,7 @@ CreatedPoint NBCRunner::selectReferencePoint(const std::vector<std::vector<doubl
 	}
 }
 
-std::vector<double>& NBCRunner::getMaxValues(const std::vector<std::vector<double>>& features)
+std::vector<double> NBCRunner::getMaxValues(const std::vector<std::vector<double>>& features)
 {
 	std::vector<double> extremeValues;
 	int numberOfFeatures = features.front().size();
@@ -137,7 +168,7 @@ std::vector<double>& NBCRunner::getMaxValues(const std::vector<std::vector<doubl
 	return extremeValues;
 }
 
-std::vector<double>& NBCRunner::getMinValues(const std::vector<std::vector<double>>& features)
+std::vector<double> NBCRunner::getMinValues(const std::vector<std::vector<double>>& features)
 {
 	std::vector<double> extremeValues;
 	int numberOfFeatures = features.front().size();
@@ -159,4 +190,48 @@ std::vector<double>& NBCRunner::getMinValues(const std::vector<std::vector<doubl
 double NBCRunner::calculateDistanceToReferencePoint(Point& point)
 {
 	return this->referencePoint.getDistance(point);
+}
+
+void NBCRunner::createClusters()
+{
+	int cluster = 0;
+
+	for (Point& initial : this->points)
+	{
+		if (initial.getCluster() == -1 && initial.getNDF() >= 1)
+		{
+			std::stack<Point*> clusterExpansion;
+			initial.setCluster(cluster);
+			clusterExpansion.push(&initial);
+
+			while (!clusterExpansion.empty())
+			{
+				Point* current = clusterExpansion.top();
+				clusterExpansion.pop();
+
+				for (Point* potentialExpansion : current->getNeigbourhood())
+				{
+					if (potentialExpansion->getCluster() == -1)
+					{
+						potentialExpansion->setCluster(cluster);
+						
+						if (potentialExpansion->getNDF() >= 1)
+							clusterExpansion.push(potentialExpansion);
+					}
+				}
+			}
+
+			++cluster;
+		}
+	}
+}
+
+std::vector<int> NBCRunner::getClustering()
+{
+	std::vector<int> output(this->points.size(), -1);
+	
+	for (int i = 0; i < this->points.size(); ++i)
+		output[i] = this->points[i].getCluster();
+
+	return output;
 }
