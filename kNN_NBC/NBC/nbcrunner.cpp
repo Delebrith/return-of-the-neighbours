@@ -92,6 +92,20 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	order[pointId]->setNeihbourhood(std::move(neighborhood));
 }
 
+void NBCRunner::calculateReversedNeighbourhoods()
+{
+	for (DatasetPoint point : this->points) {
+		point.updateReversedNeighbourhood();
+	}
+}
+
+void NBCRunner::calculateNDFs()
+{
+	for (DatasetPoint point : this->points) {
+		point.calculateNDF();
+	}
+}
+
 CreatedPoint NBCRunner::selectReferencePoint(const std::vector<std::vector<double>>& features, const ReferenceStrategy strategy)
 {
 	if (strategy == ReferenceStrategy::MAX_VALUE)

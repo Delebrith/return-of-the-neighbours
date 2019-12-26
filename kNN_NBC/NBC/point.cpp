@@ -11,6 +11,28 @@ void Point::setNeihbourhood(std::vector<Point*>&& nb)
 	this->neighbourhood = std::vector<Point*>(nb);
 }
 
+void Point::updateReversedNeighbourhood()
+{
+	for (Point* point : this->neighbourhood) {
+		point->getReverseNeighbourhoodCounter()++;
+	}
+}
+
+void Point::calculateNDF()
+{
+	this->ndf = this->reverseNeighbourhoodCounter / (double) this->neighbourhood.size();
+}
+
+int& Point::getReverseNeighbourhoodCounter()
+{
+	return this->reverseNeighbourhoodCounter;
+}
+
+double Point::getNDF()
+{
+	return this->ndf;
+}
+
 double Point::getDistanceFromReference() const
 {
 	return this->distanceFromReference;
