@@ -22,6 +22,8 @@ protected:
 	void calculateNeighborhoods(std::vector<Point*>& order);
 	void calculatePointNeighborhood(int pointId, std::vector<Point*>& order);
 	virtual void insertCloserPointToNeihborhood(orderedNeighborhood&, Point* point, double dist) = 0;
+	void calculateReversedNeighbourhoods();
+	void calculateNDFs();
 
 	CreatedPoint selectReferencePoint(const std::vector<std::vector<double>>& features,
 		const ReferenceStrategy referenceStrategy);
