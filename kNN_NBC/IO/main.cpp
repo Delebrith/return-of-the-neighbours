@@ -19,6 +19,8 @@ int main(int argc, char** argv)
 	TCLAP::MultiArg<int> ignoreColsArg("n", "ignore", "Specifies columns to be ignored by algorithm", false, "int");
 	TCLAP::ValueArg<int> kArg("k", "k", "K value for algorithm", true, 3, "int");
 	TCLAP::SwitchArg kPlusNNArg("+", "k-plus", "Use K+NN rather than KNN version of algorithm");
+	TCLAP::ValueArg<int> strategyArg("s", "ref-point-strategy", 
+		"Reference point creation strategy. Use 0 for minimal values, 1 for maximal values", true, 0, "int");
 
 	args.add(delimArg);
 	args.add(delimTabArg);
@@ -43,10 +45,11 @@ int main(int argc, char** argv)
 
 	int k = kArg.getValue();
 	int kPlus = kPlusNNArg.getValue();
+	ReferenceStrategy strategy = static_cast<ReferenceStrategy>(strategyArg.getValue());
 
 	std::vector<int> result = kPlus ?
-		nbc_kpNN(k, ReferenceStrategy::MAX_VALUE, data.getFeatures()) :
-		nbc_kNN(k, ReferenceStrategy::MAX_VALUE, data.getFeatures());
+		nbc_kpNN(k, strategy, data.getFeatures()) :
+		nbc_kNN(k, strategy, data.getFeatures());
 
 
 	std::vector<std::vector<int>> outputFeatures;
