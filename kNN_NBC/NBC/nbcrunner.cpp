@@ -15,8 +15,9 @@ NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy,
 
 std::vector<int> NBCRunner::run()
 {
-	for (Point& p : this->points)
-		p.setDistanceFromReference(this->calculateDistanceToReferencePoint(p));
+#pragma omp parallel for if(this->enableParallel)
+	for (int i = 0; i < this->points.size(); ++i)
+		this->points[i].setDistanceFromReference(this->calculateDistanceToReferencePoint(this->points[i]));
 
 	std::vector<Point*> orderedByDistToReference = this->getPointsOrderedByDistanceToReference();
 	this->calculateNeighborhoods(orderedByDistToReference);
