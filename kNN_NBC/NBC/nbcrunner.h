@@ -22,6 +22,7 @@ protected:
 	std::vector<Point*> getPointsOrderedByDistanceToReference();
 	void calculateNeighborhoods(std::vector<Point*>& order);
 	void calculatePointNeighborhood(int pointId, std::vector<Point*>& order);
+	virtual void insertPointToNeihborhoodWithDistEqualToLast(orderedNeighborhood&, Point* point, double dist) = 0;
 	virtual void insertCloserPointToNeihborhood(orderedNeighborhood&, Point* point, double dist) = 0;
 	void calculateReversedNeighbourhoods();
 	void calculateNDFs();

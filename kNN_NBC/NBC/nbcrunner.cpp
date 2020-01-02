@@ -92,7 +92,7 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	{
 		double dist = order[pointId]->getDistance(*order[bw]);
 		if (dist == eps)
-			candidateNeighborhood.insert(std::make_pair(dist, order[bw]));
+			insertPointToNeihborhoodWithDistEqualToLast(candidateNeighborhood, order[bw], dist);
 		else if (dist < eps)
 		{
 			insertCloserPointToNeihborhood(candidateNeighborhood, order[bw], dist);
@@ -105,7 +105,7 @@ void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& ord
 	{
 		double dist = order[pointId]->getDistance(*order[fw]);
 		if (dist == eps)
-			candidateNeighborhood.insert(std::make_pair(dist, order[fw]));
+			insertPointToNeihborhoodWithDistEqualToLast(candidateNeighborhood, order[fw], dist);
 		else if (dist < eps)
 		{
 			insertCloserPointToNeihborhood(candidateNeighborhood, order[fw], dist);
