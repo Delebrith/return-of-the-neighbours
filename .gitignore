@@ -338,3 +338,4 @@ kNN_NBC/pynbc/cpython.props
 
 # jupyter
 .ipynb_checkpoints/
+experiments/datasets/**
