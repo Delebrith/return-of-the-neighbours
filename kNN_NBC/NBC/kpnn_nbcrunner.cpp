@@ -16,3 +16,8 @@ void KpNN_NBCRunner::insertCloserPointToNeihborhood(orderedNeighborhood& candida
 
 	candidateNeighborhood.insert(std::make_pair(dist, point));
 }
+
+void KpNN_NBCRunner::insertPointToNeihborhoodWithDistEqualToLast(orderedNeighborhood& candidateNeighborhood, Point* point, double dist)
+{
+	candidateNeighborhood.insert(std::make_pair(dist, point));
+}
