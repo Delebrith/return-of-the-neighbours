@@ -30,6 +30,7 @@ int main(int argc, char** argv)
 	args.add(ignoreColsArg);
 	args.add(kArg);
 	args.add(kPlusNNArg);
+	args.add(strategyArg);
 
 	args.parse(argc, argv);
 
