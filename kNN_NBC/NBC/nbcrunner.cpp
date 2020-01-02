@@ -5,12 +5,12 @@
 #include <algorithm>
 
 NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy, 
-	const std::vector<std::vector<double>>& features) 
+	const std::vector<std::vector<double>>& features, bool enableParallel)
 {
 	this->k = k;
 	this->referencePoint = selectReferencePoint(features, referenceStrategy);
 	this->points = initPoints(features);
-	this->k = k;
+	this->enableParallel = enableParallel;
 }
 
 std::vector<int> NBCRunner::run()
@@ -57,6 +57,7 @@ std::vector<Point*> NBCRunner::getPointsOrderedByDistanceToReference()
 
 void NBCRunner::calculateNeighborhoods(std::vector<Point*>& order)
 {
+#pragma omp parallel for if(this->enableParallel)
 	for (int i = 0; i < this->points.size(); ++i)
 		this->calculatePointNeighborhood(i, order);
 }
@@ -132,8 +133,9 @@ void NBCRunner::calculateReversedNeighbourhoods()
 
 void NBCRunner::calculateNDFs()
 {
-	for (DatasetPoint& point : this->points) {
-		point.calculateNDF();
+#pragma omp parallel for if(enableParallel)
+	for (int i = 0; i < this->points.size(); ++i) {
+		this->points[i].calculateNDF();
 	}
 }
 

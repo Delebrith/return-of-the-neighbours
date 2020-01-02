@@ -16,6 +16,7 @@ protected:
 	int k;
 	CreatedPoint referencePoint;
 	std::vector<DatasetPoint> points;
+	bool enableParallel;
 
 	std::vector<DatasetPoint> initPoints(const std::vector<std::vector<double>>& features);
 
@@ -37,6 +38,6 @@ protected:
 	std::vector<int> getClustering();
 
 public:
-	NBCRunner(int k, const ReferenceStrategy referenceStrategy, const std::vector<std::vector<double>>& features);
+	NBCRunner(int k, const ReferenceStrategy referenceStrategy, const std::vector<std::vector<double>>& features, bool enable_parallel);
 	std::vector<int> run();
 };

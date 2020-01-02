@@ -9,7 +9,7 @@
 #endif
 
 std::vector<int> DLL_EXPORT nbc_kNN(const int k, const ReferenceStrategy referenceStategy,
-	const std::vector<std::vector<double>>& attributes);
+	const std::vector<std::vector<double>>& attributes, bool enableParallel = false);
 
 std::vector<int> DLL_EXPORT nbc_kpNN(const int k, const ReferenceStrategy referenceStategy,
-	const std::vector<std::vector<double>>& attributes);
+	const std::vector<std::vector<double>>& attributes, bool enableParallel = false);
