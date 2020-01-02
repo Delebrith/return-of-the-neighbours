@@ -10,7 +10,6 @@ NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy,
 	this->k = k;
 	this->referencePoint = selectReferencePoint(features, referenceStrategy);
 	this->points = initPoints(features);
-	this->k = k;
 }
 
 std::vector<int> NBCRunner::run()
