@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 	TCLAP::SwitchArg kPlusNNArg("+", "k-plus", "Use K+NN rather than KNN version of algorithm");
 	TCLAP::ValueArg<int> strategyArg("s", "ref-point-strategy", 
 		"Reference point creation strategy. Use 0 for minimal values, 1 for maximal values", true, 0, "int");
+	TCLAP::SwitchArg parallelArg("p", "parallel", "Use multithreaded implementation");
 
 	args.add(delimArg);
 	args.add(delimTabArg);
@@ -31,6 +32,7 @@ int main(int argc, char** argv)
 	args.add(kArg);
 	args.add(kPlusNNArg);
 	args.add(strategyArg);
+	args.add(parallelArg);
 
 	args.parse(argc, argv);
 
@@ -49,8 +51,8 @@ int main(int argc, char** argv)
 	ReferenceStrategy strategy = static_cast<ReferenceStrategy>(strategyArg.getValue());
 
 	std::vector<int> result = kPlus ?
-		nbc_kpNN(k, strategy, data.getFeatures()) :
-		nbc_kNN(k, strategy, data.getFeatures());
+		nbc_kpNN(k, strategy, data.getFeatures(), parallelArg.getValue()) :
+		nbc_kNN(k, strategy, data.getFeatures(), parallelArg.getValue());
 
 
 	std::vector<std::vector<int>> outputFeatures;
