@@ -8,19 +8,28 @@ NBCRunner::NBCRunner(int k, const ReferenceStrategy referenceStrategy,
 	const std::vector<std::vector<double>>& features, bool enableParallel)
 {
 	this->k = k;
-	this->referencePoint = selectReferencePoint(features, referenceStrategy);
+	if (referenceStrategy != ReferenceStrategy::TI_DISABLED)
+		this->referencePoint = selectReferencePoint(features, referenceStrategy);
 	this->points = initPoints(features);
 	this->enableParallel = enableParallel;
+	this->tiEnabled = referenceStrategy != ReferenceStrategy::TI_DISABLED;
 }
 
 std::vector<int> NBCRunner::run()
 {
+	if (this->tiEnabled)
+	{
 #pragma omp parallel for if(this->enableParallel)
-	for (int i = 0; i < this->points.size(); ++i)
-		this->points[i].setDistanceFromReference(this->calculateDistanceToReferencePoint(this->points[i]));
+		for (int i = 0; i < this->points.size(); ++i)
+			this->points[i].setDistanceFromReference(this->calculateDistanceToReferencePoint(this->points[i]));
 
-	std::vector<Point*> orderedByDistToReference = this->getPointsOrderedByDistanceToReference();
-	this->calculateNeighborhoods(orderedByDistToReference);
+		std::vector<Point*> orderedByDistToReference = this->getPointsOrderedByDistanceToReference();
+		this->calculateNeighborhoods(orderedByDistToReference);
+	}
+	else
+	{
+		this->calculateNeighborhoods();
+	}
 	this->calculateReversedNeighbourhoods();
 	this->calculateNDFs();
 	this->createClusters();
@@ -56,11 +65,57 @@ std::vector<Point*> NBCRunner::getPointsOrderedByDistanceToReference()
 	return ordered;
 }
 
+void NBCRunner::calculateNeighborhoods()
+{
+#pragma omp parallel for if(this->enableParallel)
+	for (int i = 0; i < this->points.size(); ++i)
+		this->calculatePointNeighborhood(i);
+}
+
 void NBCRunner::calculateNeighborhoods(std::vector<Point*>& order)
 {
 #pragma omp parallel for if(this->enableParallel)
 	for (int i = 0; i < this->points.size(); ++i)
 		this->calculatePointNeighborhood(i, order);
+}
+
+void NBCRunner::calculatePointNeighborhood(int pointId)
+{
+	orderedNeighborhood candidateNeighborhood;
+
+	int i = 0;
+	for (;candidateNeighborhood.size() < this->k && i < this->points.size(); ++i)
+	{
+		if (i == pointId)
+			continue;
+
+		double dist = this->points[pointId].getDistance(this->points[i]);
+		candidateNeighborhood.insert(std::make_pair(dist, &this->points[i]));
+	}
+
+	double maxDist = candidateNeighborhood.begin()->first;
+
+	for (; i < this->points.size(); ++i)
+	{
+		if (i == pointId)
+			continue;
+
+		double dist = this->points[pointId].getDistance(this->points[i]);
+		if (dist == maxDist)
+			insertPointToNeihborhoodWithDistEqualToLast(candidateNeighborhood, &this->points[i], dist);
+		else if (dist < maxDist)
+		{
+			insertCloserPointToNeihborhood(candidateNeighborhood, &this->points[i], dist);
+			maxDist = candidateNeighborhood.begin()->first;
+		}
+	}
+
+	std::vector<Point*> neighborhood;
+	neighborhood.reserve(candidateNeighborhood.size());
+	for (auto& p : candidateNeighborhood)
+		neighborhood.push_back(p.second);
+
+	this->points[pointId].setNeihbourhood(std::move(neighborhood));
 }
 
 void NBCRunner::calculatePointNeighborhood(int pointId, std::vector<Point*>& order)
@@ -146,7 +201,7 @@ CreatedPoint NBCRunner::selectReferencePoint(const std::vector<std::vector<doubl
 	{
 		return CreatedPoint(getMaxValues(features));
 	}
-	else
+	else if (strategy == ReferenceStrategy::MIN_VALUE)
 	{
 		return CreatedPoint(getMinValues(features));
 	}
