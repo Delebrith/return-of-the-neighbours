@@ -12,6 +12,7 @@ protected:
 	// set is sorted using greater operator, thus largest elements will be at the beginning
 	typedef std::set<std::pair<double, Point*>, std::greater<std::pair<double, Point*>>> orderedNeighborhood;
 
+	bool tiEnabled;
 
 	int k;
 	CreatedPoint referencePoint;
@@ -21,7 +22,9 @@ protected:
 	std::vector<DatasetPoint> initPoints(const std::vector<std::vector<double>>& features);
 
 	std::vector<Point*> getPointsOrderedByDistanceToReference();
+	void calculateNeighborhoods();
 	void calculateNeighborhoods(std::vector<Point*>& order);
+	void calculatePointNeighborhood(int pointId);
 	void calculatePointNeighborhood(int pointId, std::vector<Point*>& order);
 	virtual void insertPointToNeihborhoodWithDistEqualToLast(orderedNeighborhood&, Point* point, double dist) = 0;
 	virtual void insertCloserPointToNeihborhood(orderedNeighborhood&, Point* point, double dist) = 0;

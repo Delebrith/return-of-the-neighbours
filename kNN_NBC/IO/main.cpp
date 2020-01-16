@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 	TCLAP::ValueArg<int> kArg("k", "k", "K value for algorithm", true, 3, "int");
 	TCLAP::SwitchArg kPlusNNArg("+", "k-plus", "Use K+NN rather than KNN version of algorithm");
 	TCLAP::ValueArg<int> strategyArg("s", "ref-point-strategy", 
-		"Reference point creation strategy. Use 0 for minimal values, 1 for maximal values", true, 0, "int");
+		"Reference point creation strategy. Use -1 for none (disable TI), 0 for minimal values, 1 for maximal values", true, 0, "int");
 	TCLAP::SwitchArg parallelArg("p", "parallel", "Use multithreaded implementation");
 
 	args.add(delimArg);
