@@ -22,3 +22,4 @@ If libraries are already in libs directory, they will not be downloaded. This is
 
 Python module is built with pynbc project for python version that was used to run setup script. This may result in failure of detection of library files - e.g. Win32 configuration will fail if 64-bit python is configured.
 Some files from pynbc project are auto-generated during build, notably pynbc.py and pynbc.cxx. We advise to avoid panic if those files are missing from freshly-downloaded repository.
+ 
